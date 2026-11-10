@@ -54,6 +54,22 @@
   <h2>Work</h2>
 
   <article class="project lead">
+    <div class="shot"><img src="assets/talkdeck.jpg" width="1400" height="875" alt="TalkDeck presenting a slide about drug development, with slide chips, a mic control and a live transcript panel"></div>
+    <div class="body">
+      <h3>TalkDeck</h3>
+      <p class="what">A voice agent that presents a slide deck and can be interrupted mid-sentence.</p>
+      <p>Talk to it like a presenter. Ask a question and it jumps to the slide that answers it, replies, and offers to pick up where it left off. The slides are a real .pptx and it speaks from the speaker notes. The server relays the Gemini Live session so the API key stays off the browser, and the voice provider sits behind one adapter.</p>
+      <ul class="facts">
+        <li>Tested with 20 automated voice trials per run: synthesized questions streamed into a live session, including interrupting exactly as a slide changes</li>
+        <li>20 of 20 on the three-slide test deck and 19 of 20 on the six-slide deck</li>
+        <li>Barge-in detected in every trial, median 360 to 470 ms</li>
+      </ul>
+      <p class="stack">FastAPI, Gemini Live API, python-pptx, JavaScript</p>
+      <p><a class="link" href="https://github.com/surendrageddam/talkdeck">TalkDeck on GitHub</a></p>
+    </div>
+  </article>
+
+  <article class="project">
     <div class="shot"><img src="assets/chipmunk.jpg" width="1400" height="884" alt="Chipmunk showing generated SystemVerilog assertions with validation status and spec coverage"></div>
     <div class="body">
       <h3>Chipmunk</h3>
@@ -92,6 +108,18 @@
       <p>Upload a statement and get structured transactions and plain-language insights. Pages are rendered and read by Gemini through typed PydanticAI agents, so the output is validated data, not free text.</p>
       <p class="stack">FastAPI, PydanticAI, Gemini, React</p>
       <p><a class="link" href="https://github.com/surendrageddam/finnius.ai">Ledger on GitHub</a></p>
+    </div>
+  </article>
+</section>
+
+<section id="writing" class="writing">
+  <h2>Writing and notes</h2>
+  <article class="project text-only">
+    <div class="body">
+      <h3>Evals Field Manual</h3>
+      <p class="what">A one-page visual reference for evaluating AI products.</p>
+      <p>Condensed from Hamel Husain and Shreya Shankar's AI Evals FAQ: error analysis, how many examples each stage needs, validating an LLM judge against human labels, and what to run in CI versus production.</p>
+      <p><a class="link" href="https://claude.ai/artifact/AEvZwqRhKTwc4YgRXwnfmc">Read the manual</a></p>
     </div>
   </article>
 </section>
