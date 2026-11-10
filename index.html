@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Surendra Geddam, Applied AI Engineer</title>
+<meta name="description" content="Surendra Geddam builds LLM systems where the model drafts and code checks: agent pipelines, RAG and Text2SQL.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#work">Skip to work</a>
+
+<header class="top">
+  <a class="name" href="#">Surendra Geddam</a>
+  <nav aria-label="Sections">
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-text">
+    <h1>The model drafts. Code checks.</h1>
+    <p class="lede">I'm an applied AI engineer in Bengaluru. I build LLM systems that can be trusted with real work: agent pipelines, RAG and Text2SQL, where every model output is verified by code before anyone sees it.</p>
+    <p class="actions">
+      <a class="btn" href="#work">See the work</a>
+      <a class="link" href="https://github.com/surendrageddam">GitHub</a><a class="link" href="https://www.linkedin.com/in/surendra-geddam-a2a659198">LinkedIn</a>
+    </p>
+  </div>
+
+  <figure class="loop" aria-label="How my pipelines work: a spec goes to the model, the model drafts, code checks the draft, failures go back to the model, and passes ship.">
+    <svg viewBox="0 0 520 360" role="img" aria-hidden="true">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="mk"/></marker>
+        <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="mk2"/></marker>
+      </defs>
+      <path class="wire w1" d="M92 80 H168" marker-end="url(#a)"/>
+      <path class="wire w2" d="M312 80 H376 Q396 80 396 100 V150" marker-end="url(#a)"/>
+      <path class="wire back" d="M324 196 H240 Q220 196 220 176 V118" marker-end="url(#b)"/>
+      <path class="wire w3" d="M396 242 V290" marker-end="url(#a)"/>
+
+      <g class="node"><rect x="20" y="52" width="72" height="56" rx="6"/><text x="56" y="85">Spec</text></g>
+      <g class="node model"><rect x="172" y="46" width="140" height="68" rx="34"/><text x="242" y="76">Model</text><text class="sub" x="242" y="96">drafts</text></g>
+      <g class="node code"><rect x="328" y="154" width="136" height="84" rx="4"/><text x="396" y="190">Code</text><text class="sub" x="396" y="212">checks every claim</text></g>
+      <g class="node out"><rect x="340" y="294" width="112" height="48" rx="6"/><text x="396" y="323">Ships</text></g>
+      <text class="note" x="206" y="216" text-anchor="end">fails go back</text>
+    </svg>
+  </figure>
+</section>
+
+<section id="work" class="work">
+  <h2>Work</h2>
+
+  <article class="project lead">
+    <div class="shot"><img src="assets/chipmunk.jpg" width="1400" height="884" alt="Chipmunk showing generated SystemVerilog assertions with validation status and spec coverage"></div>
+    <div class="body">
+      <h3>Chipmunk</h3>
+      <p class="what">Writes hardware verification properties from a plain-English spec.</p>
+      <p>Give it an RTL module and a specification, and it returns a compilable SystemVerilog Assertion bind module. The model only handles language and code generation. Parsing, validation, dependency analysis and ranking are deterministic, so a hallucinated signal name is caught against the real RTL graph and fixed before it reaches the output.</p>
+      <ul class="facts">
+        <li>Seven-stage pipeline with a validate-and-fix loop</li>
+        <li>Candidates ranked with SymbiYosys bounded model checking</li>
+        <li>100% spec-sentence coverage on its baseline test suite</li>
+      </ul>
+      <p class="stack">FastAPI, PydanticAI, pyslang, React</p>
+      <p><a class="link" href="https://github.com/surendrageddam/Chipmunk">Chipmunk on GitHub</a></p>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="shot"><img src="assets/nexus.jpg" width="1400" height="700" alt="NEXUS analysing a website visitor with a live log of five agents" loading="lazy"></div>
+    <div class="body">
+      <h3>NEXUS</h3>
+      <p class="what">Turns an anonymous website visit into a sales-ready account report. Built for an AI hackathon.</p>
+      <p>Five agents identify the company, enrich its profile, score buying intent and infer the visitor's role, then a synthesizer writes the summary and three recommended actions. Agents run in parallel and stream their progress to the dashboard as they finish.</p>
+      <ul class="facts">
+        <li>Parallel agents, about three times faster than chaining them</li>
+        <li>Enrichment falls through four sources before asking the model</li>
+        <li>Each profile carries a confidence score from its sources</li>
+      </ul>
+      <p class="stack">FastAPI, React, DeepSeek, server-sent events</p>
+      <p><a class="link" href="https://nexusiq.vercel.app">Live demo</a> <a class="link" href="https://github.com/surendrageddam/Nexus">NEXUS on GitHub</a></p>
+    </div>
+  </article>
+
+  <article class="project text-only">
+    <div class="body">
+      <h3>Ledger</h3>
+      <p class="what">Reads bank statement PDFs and explains where the money went.</p>
+      <p>Upload a statement and get structured transactions and plain-language insights. Pages are rendered and read by Gemini through typed PydanticAI agents, so the output is validated data, not free text.</p>
+      <p class="stack">FastAPI, PydanticAI, Gemini, React</p>
+      <p><a class="link" href="https://github.com/surendrageddam/finnius.ai">Ledger on GitHub</a></p>
+    </div>
+  </article>
+</section>
+
+<section id="experience" class="exp">
+  <h2>Experience</h2>
+  <div class="role">
+    <div class="role-head">
+      <h3>Axtria</h3>
+      <p>AI engineering for enterprise pharma analytics, 2023 to present</p>
+    </div>
+    <ul class="wins">
+      <li><strong>Text2SQL engine.</strong> A semantic layer maps business terms and entity relationships onto the schema. Accuracy on complex pharma queries went from 60% to over 90%.</li>
+      <li><strong>Multimodal agentic RAG.</strong> OCR, keyword and vector search, and knowledge graphs over more than 10,000 policy documents for a pharma client.</li>
+      <li><strong>Analytical workbench.</strong> A plan-and-execute loop answers multi-hop questions and tells real failures from odd results, cutting multi-step analysis time by an estimated 90%.</li>
+      <li><strong>Multi-agent harness.</strong> A framework-agnostic orchestration system with pluggable runtimes (LangGraph, CrewAI or custom), agent discovery and human escalation.</li>
+      <li><strong>Agent memory.</strong> Episodic, procedural, long-term and short-term tiers, so agents keep context and learnings across sessions.</li>
+      <li><strong>Langfuse MCP server.</strong> Trace retrieval, latency stats and low-score flagging as tools, for debugging pipelines from the chat interface.</li>
+    </ul>
+  </div>
+  <div class="role small">
+    <div class="role-head">
+      <h3>Hotnot</h3>
+      <p>Data science intern, summer 2022</p>
+    </div>
+    <ul class="wins">
+      <li><strong>Feed recommendations.</strong> A hybrid collaborative and content-based engine that raised engagement by 23%.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <h2>About</h2>
+  <div class="cols">
+    <div class="prose">
+      <p>I've spent three years building generative AI and multi-agent systems, mostly for enterprise pharma analytics. Platform demonstrations that included my Text2SQL engine and multimodal RAG pipeline led to more than $4.5M in follow-on client pipeline.</p>
+      <p>I care most about reliability. An LLM is good at reading and writing, and bad at being held to account, so I give it the reading and writing and let ordinary code decide what is true.</p>
+    </div>
+    <dl class="timeline">
+      <div><dt>Now</dt><dd>Applied AI Engineer, Axtria<br><span>Bengaluru</span></dd></div>
+      <div><dt>Also</dt><dd>Building XORVIS AI<br><span>Agents for hardware verification</span></dd></div>
+      <div><dt>2018 to 2023</dt><dd>B.Tech and M.Tech, IIT Kharagpur<br><span>Mechanical Engineering, micro-specialization in AI</span></dd></div>
+    </dl>
+  </div>
+  <dl class="skillset">
+    <div><dt>Agents and LLMs</dt><dd>RAG, multi-agent systems, agent memory, LangGraph, LangChain, PydanticAI, Mem0, Langfuse, MCP</dd></div>
+    <div><dt>ML and data</dt><dd>PyTorch, Hugging Face, scikit-learn, FAISS, ChromaDB, Databricks, Snowflake, PostgreSQL</dd></div>
+    <div><dt>Building and shipping</dt><dd>Python, SQL, C++, FastAPI, Docker, AWS (EC2, Lambda, Glue), Jenkins</dd></div>
+  </dl>
+</section>
+
+<section id="contact" class="contact">
+  <h2>Get in touch</h2>
+  <p>I'm open to applied AI engineering roles. The fastest way to see how I work is the code.</p>
+  <p class="actions">
+    <a class="btn" href="https://github.com/surendrageddam">Open my GitHub</a>
+    <a class="link" href="https://www.linkedin.com/in/surendra-geddam-a2a659198">LinkedIn</a>
+    <!-- Add when ready: <a class="link" href="mailto:YOUR_EMAIL">Email me</a> -->
+  </p>
+</section>
+</main>
+
+<footer>
+  <p>Surendra Geddam, Bengaluru</p>
+</footer>
+</body>
+</html>
