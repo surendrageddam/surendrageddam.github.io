@@ -6,14 +6,17 @@
 <title>Surendra Geddam, Applied AI Engineer</title>
 <meta name="description" content="Surendra Geddam designs and builds agentic AI systems: agent harnesses, memory, multimodal RAG, Text2SQL, voice agents and evals. Applied AI engineer in Bengaluru.">
 <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/caveat-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <a class="skip" href="#work">Skip to work</a>
-<div class="backdrop" aria-hidden="true"></div>
+
+<!-- hand-drawn line filters: "rough" is still, "boil" is re-seeded by script.js so doodles wobble -->
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter>
+  <filter id="boil" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence id="boil-noise" type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+</svg>
 
 <header class="top">
   <div class="top-in">
@@ -25,60 +28,65 @@
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="theme" type="button" aria-label="Switch colour theme"><span class="theme-dot"></span><span class="theme-label">Theme</span></button>
+    <button class="theme" type="button" aria-label="Switch between notebook and chalkboard"><span class="theme-label">Chalkboard</span></button>
   </div>
 </header>
 
 <main>
 <section class="hero">
   <div class="hero-text">
-    <p class="hello load l1">Surendra Geddam, applied AI engineer in Bengaluru</p>
-    <h1 class="load l2">I design and build agentic AI systems.</h1>
+    <p class="hello load l1">Hi, I'm Surendra. Applied AI engineer in Bengaluru.</p>
+    <h1 class="load l2">I design and build <span class="hl">agentic AI</span> systems.</h1>
     <p class="lede load l3">Three years across agent platforms, memory, retrieval, Text2SQL, voice and evaluation, including work shown in platform demos that led to more than $4.5M in follow-on client pipeline.</p>
     <p class="actions load l4">
       <a class="btn" href="#work">See the work</a>
       <a class="link" href="https://github.com/surendrageddam">GitHub</a>
       <a class="link" href="https://www.linkedin.com/in/surendra-geddam-a2a659198">LinkedIn</a>
     </p>
+    <svg class="doodle d-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 14.5 9 22 9.5 16 14 18 21.5 12 17 6 21.5 8 14 2 9.5 9.5 9Z"/></svg>
+    <svg class="doodle d-spring" viewBox="0 0 90 30" aria-hidden="true"><path d="M3 20c6-22 14-22 14-4s8 18 14 0 8-18 14 0 8 18 14 0 8-18 14 0 8 14 12 4"/></svg>
   </div>
 
-  <div class="skillmap load l4" role="group" aria-label="What I work on. Choose a skill to highlight the work that uses it.">
-    <p class="map-hint">Pick a skill to see where I've used it</p>
-    <section class="region r-agents">
-      <h2>Agent systems</h2>
-      <div class="chips">
-        <button type="button" data-skill="harness">Agentic harness</button>
-        <button type="button" data-skill="orchestration">Multi-agent orchestration</button>
-        <button type="button" data-skill="memory">Agentic memory systems</button>
-      </div>
-    </section>
-    <section class="region r-data">
-      <h2>Interfaces and data</h2>
-      <div class="chips">
-        <button type="button" data-skill="voice">Voice AI agents</button>
-        <button type="button" data-skill="rag">Multimodal RAG</button>
-        <button type="button" data-skill="text2sql">Text2SQL</button>
-      </div>
-    </section>
-    <section class="region r-quality">
-      <h2>Quality and delivery</h2>
-      <div class="chips">
-        <button type="button" data-skill="evals">Evals</button>
-        <button type="button" data-skill="claude">Building with Claude Code</button>
-      </div>
-    </section>
-    <p class="map-status" aria-live="polite" hidden><span class="map-count"></span> <button type="button" class="map-go">Show the first</button> <button type="button" class="map-clear">Clear</button></p>
+  <div class="orbit load l4" role="group" aria-label="My skills. Choose one to highlight the work that uses it.">
+    <p class="bubble" aria-live="polite"><span class="bubble-text">Pick a skill. I'll show you where I used it.</span>
+      <span class="bubble-actions" hidden><button type="button" class="map-go">Take me there</button><button type="button" class="map-clear">Clear</button></span>
+    </p>
+    <div class="stage">
+      <canvas aria-hidden="true"></canvas>
+      <svg class="bot" viewBox="0 0 120 132" aria-hidden="true">
+        <g class="bot-lines">
+          <path d="M60 22V9"/><circle class="bulb" cx="60" cy="6" r="5"/>
+          <rect x="8" y="44" width="11" height="22" rx="4"/><rect x="101" y="44" width="11" height="22" rx="4"/>
+          <rect class="head" x="18" y="22" width="84" height="68" rx="20"/>
+          <path d="M48 90v9M72 90v9M28 128q32-34 64 0"/>
+          <path d="M45 73q15 12 30 0"/>
+        </g>
+        <g class="eyes">
+          <circle class="eye" cx="42" cy="52" r="11"/><circle class="eye" cx="78" cy="52" r="11"/>
+          <circle class="pupil" cx="42" cy="52" r="4.6"/><circle class="pupil" cx="78" cy="52" r="4.6"/>
+        </g>
+      </svg>
+      <button type="button" class="node g-agents" data-skill="harness">Harness</button>
+      <button type="button" class="node g-agents" data-skill="orchestration">Orchestration</button>
+      <button type="button" class="node g-agents" data-skill="memory">Agent memory</button>
+      <button type="button" class="node g-data" data-skill="voice">Voice agents</button>
+      <button type="button" class="node g-data" data-skill="rag">Multimodal RAG</button>
+      <button type="button" class="node g-data" data-skill="text2sql">Text2SQL</button>
+      <button type="button" class="node g-quality" data-skill="evals">Evals</button>
+      <button type="button" class="node g-quality" data-skill="claude">Claude Code</button>
+    </div>
+    <p class="orbit-hint">drag to spin me</p>
   </div>
 </section>
 
 <section class="stats" aria-label="Results">
-  <div class="stat"><p class="num"><span data-to="3" data-suf="+">3+</span></p><p>years building GenAI and agent systems</p></div>
-  <div class="stat"><p class="num"><span data-to="90" data-suf="%+">90%+</span></p><p>Text2SQL accuracy on complex queries, up from 60%</p></div>
-  <div class="stat"><p class="num"><span data-to="10000" data-suf="+">10,000+</span></p><p>policy documents behind a multimodal RAG pipeline</p></div>
-  <div class="stat"><p class="num"><span data-to="4.5" data-pre="$" data-suf="M+" data-dec="1">$4.5M+</span></p><p>follow-on client pipeline from platform demos</p></div>
+  <div class="stat n1 pop"><p class="num"><span data-to="3" data-suf="+">3+</span></p><p>years building GenAI and agent systems</p></div>
+  <div class="stat n2 pop"><p class="num"><span data-to="90" data-suf="%+">90%+</span></p><p>Text2SQL accuracy on complex queries, up from 60%</p></div>
+  <div class="stat n3 pop"><p class="num"><span data-to="10000" data-suf="+">10,000+</span></p><p>policy documents behind a multimodal RAG pipeline</p></div>
+  <div class="stat n4 pop"><p class="num"><span data-to="4.5" data-pre="$" data-suf="M+" data-dec="1">$4.5M+</span></p><p>follow-on client pipeline from platform demos</p></div>
 </section>
 
-<section id="work" class="work">
+<section id="work" class="work sec">
   <h2>Work</h2>
 
   <article class="project" data-skills="voice evals claude">
@@ -92,7 +100,7 @@
         <li>20 of 20 on the three-slide test deck and 19 of 20 on the six-slide deck</li>
         <li>Barge-in detected in every trial, median 360 to 470 ms</li>
       </ul>
-      <p class="tags"><button type="button" data-skill="voice">Voice AI agents</button><button type="button" data-skill="evals">Evals</button><button type="button" data-skill="claude">Claude Code</button></p>
+      <p class="tags"><button type="button" data-skill="voice">Voice agents</button><button type="button" data-skill="evals">Evals</button><button type="button" data-skill="claude">Claude Code</button></p>
       <p class="stack">FastAPI, Gemini Live API, python-pptx, JavaScript</p>
       <p><a class="link" href="https://github.com/surendrageddam/talkdeck">TalkDeck on GitHub</a></p>
     </div>
@@ -109,7 +117,7 @@
         <li>Candidates ranked with SymbiYosys bounded model checking</li>
         <li>100% spec-sentence coverage on its baseline test suite</li>
       </ul>
-      <p class="tags"><button type="button" data-skill="orchestration">Multi-agent orchestration</button><button type="button" data-skill="evals">Evals</button></p>
+      <p class="tags"><button type="button" data-skill="orchestration">Orchestration</button><button type="button" data-skill="evals">Evals</button></p>
       <p class="stack">FastAPI, PydanticAI, pyslang, React</p>
       <p><a class="link" href="https://github.com/surendrageddam/Chipmunk">Chipmunk on GitHub</a></p>
     </div>
@@ -126,7 +134,7 @@
         <li>Enrichment falls through four sources before asking the model</li>
         <li>Each profile carries a confidence score from its sources</li>
       </ul>
-      <p class="tags"><button type="button" data-skill="orchestration">Multi-agent orchestration</button></p>
+      <p class="tags"><button type="button" data-skill="orchestration">Orchestration</button></p>
       <p class="stack">FastAPI, React, DeepSeek, server-sent events</p>
       <p><a class="link" href="https://nexusiq.vercel.app">Live demo</a> <a class="link" href="https://github.com/surendrageddam/Nexus">NEXUS on GitHub</a></p>
     </div>
@@ -143,19 +151,19 @@
   </article>
 </section>
 
-<section id="writing" class="writing">
+<section id="writing" class="writing sec">
   <h2>Writing and notes</h2>
-  <article class="note" data-skills="evals">
+  <article class="note sketch" data-skills="evals">
     <div>
       <h3>Evals Field Manual</h3>
       <p class="what">A one-page visual reference for evaluating AI products.</p>
       <p>Condensed from Hamel Husain and Shreya Shankar's AI Evals FAQ: error analysis, how many examples each stage needs, validating an LLM judge against human labels, and what to run in CI versus production.</p>
     </div>
-    <a class="btn ghost" href="https://claude.ai/artifact/AEvZwqRhKTwc4YgRXwnfmc">Read the manual</a>
+    <a class="btn" href="https://claude.ai/artifact/AEvZwqRhKTwc4YgRXwnfmc">Read the manual</a>
   </article>
 </section>
 
-<section id="experience" class="exp">
+<section id="experience" class="exp sec">
   <h2>Experience</h2>
   <div class="role">
     <div class="role-head">
@@ -163,12 +171,12 @@
       <p>AI engineering for enterprise pharma analytics, 2023 to present</p>
     </div>
     <ul class="wins">
-      <li data-skills="text2sql"><strong>Text2SQL engine</strong>A semantic layer maps business terms and entity relationships onto the schema. Accuracy on complex pharma queries went from 60% to over 90%.</li>
-      <li data-skills="rag"><strong>Multimodal agentic RAG</strong>OCR, keyword and vector search, and knowledge graphs over more than 10,000 policy documents for a pharma client.</li>
-      <li data-skills="orchestration text2sql"><strong>Analytical workbench</strong>A plan-and-execute loop answers multi-hop questions and tells real failures from odd results, cutting multi-step analysis time by an estimated 90%.</li>
-      <li data-skills="harness orchestration"><strong>Multi-agent harness</strong>A framework-agnostic orchestration system with pluggable runtimes (LangGraph, CrewAI or custom), agent discovery and human escalation.</li>
-      <li data-skills="memory"><strong>Agent memory</strong>Episodic, procedural, long-term and short-term tiers, so agents keep context and learnings across sessions.</li>
-      <li data-skills="evals"><strong>Langfuse MCP server</strong>Trace retrieval, latency stats and low-score flagging as tools, for debugging pipelines from the chat interface.</li>
+      <li class="sketch pop" data-skills="text2sql"><strong>Text2SQL engine</strong>A semantic layer maps business terms and entity relationships onto the schema. Accuracy on complex pharma queries went from 60% to over 90%.</li>
+      <li class="sketch pop" data-skills="rag"><strong>Multimodal agentic RAG</strong>OCR, keyword and vector search, and knowledge graphs over more than 10,000 policy documents for a pharma client.</li>
+      <li class="sketch pop" data-skills="orchestration text2sql"><strong>Analytical workbench</strong>A plan-and-execute loop answers multi-hop questions and tells real failures from odd results, cutting multi-step analysis time by an estimated 90%.</li>
+      <li class="sketch pop" data-skills="harness orchestration"><strong>Multi-agent harness</strong>A framework-agnostic orchestration system with pluggable runtimes (LangGraph, CrewAI or custom), agent discovery and human escalation.</li>
+      <li class="sketch pop" data-skills="memory"><strong>Agent memory</strong>Episodic, procedural, long-term and short-term tiers, so agents keep context and learnings across sessions.</li>
+      <li class="sketch pop" data-skills="evals"><strong>Langfuse MCP server</strong>Trace retrieval, latency stats and low-score flagging as tools, for debugging pipelines from the chat interface.</li>
     </ul>
   </div>
   <div class="role small">
@@ -177,12 +185,12 @@
       <p>Data science intern, summer 2022</p>
     </div>
     <ul class="wins">
-      <li data-skills=""><strong>Feed recommendations</strong>A hybrid collaborative and content-based engine that raised engagement by 23%.</li>
+      <li class="sketch pop" data-skills=""><strong>Feed recommendations</strong>A hybrid collaborative and content-based engine that raised engagement by 23%.</li>
     </ul>
   </div>
 </section>
 
-<section id="about" class="about">
+<section id="about" class="about sec">
   <h2>About</h2>
   <div class="cols">
     <div class="prose">
@@ -202,13 +210,14 @@
   </dl>
 </section>
 
-<section id="contact" class="contact">
+<section id="contact" class="contact sec">
   <h2>Building something with agents? Let's talk.</h2>
   <p>I'm open to applied AI engineering roles. The fastest way to see how I work is the code.</p>
   <p class="actions">
     <a class="btn" href="https://www.linkedin.com/in/surendra-geddam-a2a659198">Message me on LinkedIn</a>
-    <a class="btn ghost" href="https://github.com/surendrageddam">Open my GitHub</a>
+    <a class="btn alt" href="https://github.com/surendrageddam">Open my GitHub</a>
   </p>
+  <svg class="doodle d-arrow" viewBox="0 0 120 80" aria-hidden="true"><path d="M112 8C92 4 38 10 22 58M8 44l14 16 16-12"/></svg>
 </section>
 </main>
 
