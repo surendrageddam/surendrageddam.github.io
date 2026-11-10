@@ -51,26 +51,14 @@ h1 { font: 700 clamp(2.6rem, 6.2vw, 4.75rem)/1.02 var(--display); letter-spacing
 .btn:hover { background: var(--signal); color: #fff; }
 .link { color: var(--signal); font-weight: 500; text-underline-offset: 4px; margin-right: 1.25rem; }
 
-.loop { margin: 0; }
-.loop svg { width: 100%; height: auto; }
-.wire { fill: none; stroke: var(--ink); stroke-width: 2; }
-.wire.back { stroke: var(--copper); stroke-dasharray: 6 6; }
-.mk { fill: var(--ink); } .mk2 { fill: var(--copper); }
-.node rect { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
-.node.agent text { font-size: 15px; }
-.node.mem rect { stroke: var(--copper); stroke-dasharray: 5 5; }
-.node.mem text { font: 500 13px var(--body); fill: var(--soft); }
-.node.model rect { stroke: var(--signal); }
-.node.code rect { fill: var(--ink); }
-.node text { font: 600 17px var(--display); fill: var(--ink); text-anchor: middle; }
-.node .sub { font: 400 13px var(--body); fill: var(--soft); }
-.node.code text { fill: var(--paper); }
-.node.code .sub { fill: var(--paper); opacity: .75; }
-.note { font: 500 13px var(--body); fill: var(--copper); }
-@media (prefers-reduced-motion: no-preference) {
-  .wire.back { animation: flow 1.2s linear infinite; }
-  @keyframes flow { to { stroke-dashoffset: -24; } }
-}
+.skillmap { display: grid; gap: 1rem; }
+.region { background: var(--panel); border: 1px solid var(--line); border-left-width: 5px; border-radius: 6px; padding: 1rem 1.25rem 1.15rem; }
+.r-agents { border-left-color: var(--signal); }
+.r-data { border-left-color: var(--copper); }
+.r-quality { border-left-color: var(--ink); }
+.region h2 { font: 600 .95rem var(--display); color: var(--soft); margin: 0 0 .7rem; padding: 0; border: 0; letter-spacing: 0; }
+.region ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.region li { border: 1px solid var(--ink); border-radius: 5px; padding: .35rem .8rem; font-weight: 500; font-size: 1rem; }
 
 /* sections */
 section > h2 { font: 600 1.6rem var(--display); letter-spacing: -0.02em; margin: 0 0 2rem; padding-top: 1.25rem; border-top: 2px solid var(--ink); }
