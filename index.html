@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Surendra Geddam, Applied AI Engineer</title>
-<meta name="description" content="Surendra Geddam builds LLM systems where the model drafts and code checks: agent pipelines, RAG and Text2SQL.">
+<meta name="description" content="Surendra Geddam architects multi-agent, Text2SQL and retrieval systems for enterprise analytics. Applied AI engineer in Bengaluru.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -26,30 +26,36 @@
 <main>
 <section class="hero">
   <div class="hero-text">
-    <h1>The model drafts. Code checks.</h1>
-    <p class="lede">I'm an applied AI engineer in Bengaluru. I build LLM systems that can be trusted with real work: agent pipelines, RAG and Text2SQL, where every model output is verified by code before anyone sees it.</p>
+    <h1>Multi-agent systems for enterprise analytics.</h1>
+    <p class="lede">Applied AI engineer in Bengaluru. For three years I've architected the agents, Text2SQL and retrieval systems behind enterprise pharma analytics, including work shown in platform demos that led to more than $4.5M in follow-on client pipeline.</p>
     <p class="actions">
       <a class="btn" href="#work">See the work</a>
       <a class="link" href="https://github.com/surendrageddam">GitHub</a><a class="link" href="https://www.linkedin.com/in/surendra-geddam-a2a659198">LinkedIn</a>
     </p>
   </div>
 
-  <figure class="loop" aria-label="How my pipelines work: a spec goes to the model, the model drafts, code checks the draft, failures go back to the model, and passes ship.">
+  <figure class="loop" aria-label="An architecture I build: a question goes to a planner, which delegates to Text2SQL, document retrieval and tool agents. Shared memory and traces sit underneath, and the answer comes back.">
     <svg viewBox="0 0 520 360" role="img" aria-hidden="true">
       <defs>
         <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="mk"/></marker>
         <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="mk2"/></marker>
       </defs>
-      <path class="wire w1" d="M92 80 H168" marker-end="url(#a)"/>
-      <path class="wire w2" d="M312 80 H376 Q396 80 396 100 V150" marker-end="url(#a)"/>
-      <path class="wire back" d="M324 196 H240 Q220 196 220 176 V118" marker-end="url(#b)"/>
-      <path class="wire w3" d="M396 242 V290" marker-end="url(#a)"/>
+      <path class="wire" d="M92 178 H120" marker-end="url(#a)"/>
+      <path class="wire" d="M224 178 C243 178 243 80 262 80" marker-end="url(#a)"/>
+      <path class="wire" d="M224 178 H262" marker-end="url(#a)"/>
+      <path class="wire" d="M224 178 C243 178 243 280 262 280" marker-end="url(#a)"/>
+      <path class="wire" d="M380 80 C394 80 394 178 408 178"/>
+      <path class="wire" d="M380 178 H408" marker-end="url(#a)"/>
+      <path class="wire" d="M380 280 C394 280 394 178 408 178"/>
+      <path class="wire back" d="M172 206 V318" marker-end="url(#b)"/>
 
-      <g class="node"><rect x="20" y="52" width="72" height="56" rx="6"/><text x="56" y="85">Spec</text></g>
-      <g class="node model"><rect x="172" y="46" width="140" height="68" rx="34"/><text x="242" y="76">Model</text><text class="sub" x="242" y="96">drafts</text></g>
-      <g class="node code"><rect x="328" y="154" width="136" height="84" rx="4"/><text x="396" y="190">Code</text><text class="sub" x="396" y="212">checks every claim</text></g>
-      <g class="node out"><rect x="340" y="294" width="112" height="48" rx="6"/><text x="396" y="323">Ships</text></g>
-      <text class="note" x="206" y="216" text-anchor="end">fails go back</text>
+      <g class="node"><rect x="8" y="150" width="84" height="56" rx="6"/><text x="50" y="183">Question</text></g>
+      <g class="node model"><rect x="120" y="144" width="104" height="68" rx="34"/><text x="172" y="184">Planner</text></g>
+      <g class="node agent"><rect x="262" y="54" width="118" height="52" rx="6"/><text x="321" y="85">Text2SQL</text></g>
+      <g class="node agent"><rect x="262" y="154" width="118" height="52" rx="6"/><text x="321" y="185">Document RAG</text></g>
+      <g class="node agent"><rect x="262" y="254" width="118" height="52" rx="6"/><text x="321" y="285">Tools via MCP</text></g>
+      <g class="node code"><rect x="408" y="148" width="104" height="60" rx="4"/><text x="460" y="176">Answer</text><text class="sub" x="460" y="195">with trace</text></g>
+      <g class="node mem"><rect x="120" y="322" width="260" height="32" rx="6"/><text x="250" y="343">Memory, traces, human escalation</text></g>
     </svg>
   </figure>
 </section>
@@ -131,8 +137,8 @@
   <h2>About</h2>
   <div class="cols">
     <div class="prose">
-      <p>I've spent three years building generative AI and multi-agent systems, mostly for enterprise pharma analytics. Platform demonstrations that included my Text2SQL engine and multimodal RAG pipeline led to more than $4.5M in follow-on client pipeline.</p>
-      <p>I care most about reliability. An LLM is good at reading and writing, and bad at being held to account, so I give it the reading and writing and let ordinary code decide what is true.</p>
+      <p>My work covers the whole stack of an agent product: semantic layers and retrieval that map business language onto messy data, planning loops for multi-step questions, memory, orchestration, and the observability to debug all of it.</p>
+      <p>I'm most useful where a demo has to become a system clients rely on: measurable accuracy, clear failure handling, and designs other engineers can extend.</p>
     </div>
     <dl class="timeline">
       <div><dt>Now</dt><dd>Applied AI Engineer, Axtria<br><span>Bengaluru</span></dd></div>

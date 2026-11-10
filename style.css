@@ -57,6 +57,9 @@ h1 { font: 700 clamp(2.6rem, 6.2vw, 4.75rem)/1.02 var(--display); letter-spacing
 .wire.back { stroke: var(--copper); stroke-dasharray: 6 6; }
 .mk { fill: var(--ink); } .mk2 { fill: var(--copper); }
 .node rect { fill: var(--panel); stroke: var(--ink); stroke-width: 2; }
+.node.agent text { font-size: 15px; }
+.node.mem rect { stroke: var(--copper); stroke-dasharray: 5 5; }
+.node.mem text { font: 500 13px var(--body); fill: var(--soft); }
 .node.model rect { stroke: var(--signal); }
 .node.code rect { fill: var(--ink); }
 .node text { font: 600 17px var(--display); fill: var(--ink); text-anchor: middle; }
