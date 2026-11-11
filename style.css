@@ -146,12 +146,9 @@ h1 { font: 700 clamp(3.2rem, 7.2vw, 5.4rem)/.95 var(--hand); letter-spacing: -.0
 .bubble-actions[hidden] { display: none; }
 .bubble-actions button { background: none; border: 0; padding: 0; font: 700 1.3rem/1 var(--hand); color: var(--pen); text-decoration: underline wavy; text-underline-offset: 4px; }
 
-.rain { position: fixed; inset: 0; z-index: 15; pointer-events: none; overflow: hidden; }
-.drop { position: absolute; left: 0; top: 0; will-change: transform; }
-.drop svg { display: block; width: 100%; overflow: visible; }
-.drop .a-body { stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; }
-.drop .a-stem { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; }
-.drop .a-leaf { fill: var(--green); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.scribbles { position: absolute; top: 0; left: 0; right: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.scribbles span { position: absolute; white-space: nowrap; font: 600 1.6rem/1 var(--hand); color: var(--ink); opacity: .13; }
+.scribbles span.pen { color: var(--pen); opacity: .2; }
 
 /* load sequence */
 @media (prefers-reduced-motion: no-preference) {

@@ -253,56 +253,38 @@
     watch.forEach(function (el) { el.classList.add('seen'); });
   }
 
-  /* Scrolling shakes apples loose: they drop through the page, bounce on the bottom edge and roll away */
-  if (!calm) (function () {
+  /* Notebook margins: faint physics and maths scribbles scattered behind the page, different on every visit */
+  (function () {
+    var eqs = ['F = ma', 'E = mc²', 'F = G m₁m₂ / r²', 'v = u + at', 's = ut + ½at²', 'p = mv', 'KE = ½mv²', 'T = 2π√(L/g)',
+      'PV = nRT', 'λ = h / p', 'Δx · Δp ≥ ħ/2', '∇ · E = ρ / ε₀', '∮ B · dl = μ₀I', 'e^(iπ) + 1 = 0', 'a² + b² = c²',
+      '∫ eˣ dx = eˣ + C', 'Σ 1/n² = π²/6', 'lim sin x / x = 1', 'x = (−b ± √(b² − 4ac)) / 2a', 'dy/dx = lim Δy/Δx',
+      'P(A|B) = P(B|A) P(A) / P(B)', 'H(p) = −Σ p log p', 'w ← w − η ∇L', 'softmax(z)ᵢ = e^zᵢ / Σ e^zⱼ', 'Attention = softmax(QKᵀ / √d) V',
+      'σ(x) = 1 / (1 + e⁻ˣ)', 'ŷ = Wx + b', 'F₁₂ = −F₂₁', 'g ≈ 9.8 m/s²', 'τ = r × F'];
     var layer = document.createElement('div');
-    layer.className = 'rain'; layer.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(layer);
-    var art = fruit[0].el.querySelector('svg').innerHTML, kinds = ['k-red', 'k-green', 'k-gold'];
-    var live = [], going = false, prevT = 0, lastY = window.scrollY, travelled = 0;
-    function spawn() {
-      if (live.length >= 7) return;
-      var el = document.createElement('div');
-      el.className = 'drop ' + kinds[Math.floor(Math.random() * 3)];
-      el.innerHTML = '<svg viewBox="0 0 40 44">' + art + '</svg>';
-      var size = 26 + Math.random() * 20, x = Math.random() * (window.innerWidth - size) + size / 2, y = -size;
-      var box = stage.getBoundingClientRect();
-      if (box.bottom > 120 && box.top < window.innerHeight) {
-        var home = fruit.filter(function (a) { return a.mode === 'home'; });
-        var pick = home[Math.floor(Math.random() * home.length)];
-        if (pick) { var r = pick.el.querySelector('svg').getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; size = r.width; }
+    layer.className = 'scribbles'; layer.setAttribute('aria-hidden', 'true');
+    document.body.insertBefore(layer, document.body.firstChild);
+    function scatter() {
+      var h = document.documentElement.scrollHeight, w = window.innerWidth;
+      layer.style.height = h + 'px';
+      layer.textContent = '';
+      var pool = eqs.slice(), rows = Math.floor(h / 210);
+      for (var i = 0; i < rows; i++) {
+        if (!pool.length) pool = eqs.slice();
+        var el = document.createElement('span');
+        el.textContent = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+        var side = i % 2 ? 0.52 : 0;
+        el.style.left = ((side + Math.random() * 0.4) * 100).toFixed(1) + '%';
+        el.style.top = (120 + i * 210 + Math.random() * 120).toFixed(0) + 'px';
+        el.style.fontSize = (w < 600 ? 1.1 + Math.random() * 0.5 : 1.4 + Math.random() * 1.1).toFixed(2) + 'rem';
+        el.style.transform = 'rotate(' + (Math.random() * 16 - 8).toFixed(1) + 'deg)';
+        if (i % 3 === 0) el.className = 'pen';
+        layer.appendChild(el);
       }
-      el.style.width = size + 'px';
-      layer.appendChild(el);
-      live.push({ el: el, x: x, y: y, r: size / 2, vx: (Math.random() - 0.5) * 160, vy: Math.random() * 120, rot: Math.random() * 360, vr: (Math.random() - 0.5) * 500, hits: 0, fade: 1 });
-      if (!going) { going = true; requestAnimationFrame(function (t) { prevT = t; tickRain(t); }); }
     }
-    function tickRain(t) {
-      var dt = Math.min((t - prevT) / 1000, 0.032); prevT = t;
-      var floor = window.innerHeight;
-      live = live.filter(function (d) {
-        d.vy += 1900 * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.rot += d.vr * dt;
-        if (d.y > floor - d.r && d.vy > 0) {
-          d.y = floor - d.r; d.hits++;
-          d.vy = -d.vy * 0.42; d.vx *= 0.8; d.vr = d.vx * 4;
-          if (Math.abs(d.vy) < 90) d.vy = 0;
-        }
-        if (d.hits >= 2) d.fade -= dt * 1.6;
-        if (d.fade <= 0 || d.x < -60 || d.x > window.innerWidth + 60) { d.el.remove(); return false; }
-        d.el.style.transform = 'translate(' + d.x.toFixed(1) + 'px,' + d.y.toFixed(1) + 'px) translate(-50%,-50%) rotate(' + d.rot.toFixed(0) + 'deg)';
-        d.el.style.opacity = Math.max(d.fade, 0).toFixed(2);
-        return true;
-      });
-      if (live.length) requestAnimationFrame(tickRain); else going = false;
-    }
-    window.addEventListener('scroll', function () {
-      var y = window.scrollY;
-      travelled += Math.abs(y - lastY); lastY = y;
-      while (travelled > 240) {
-        travelled -= 240;
-        if (Math.random() < 0.75) spawn();
-      }
-    }, { passive: true });
+    var timer;
+    window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(scatter, 250); });
+    window.addEventListener('load', scatter);
+    scatter();
   })();
 
   /* Local time, IST */
