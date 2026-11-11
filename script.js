@@ -12,14 +12,13 @@
     var next = theme() === 'dark' ? 'light' : 'dark';
     root.dataset.theme = next;
     try { localStorage.setItem('theme', next); } catch (e) {}
-    labelTheme(); draw();
+    labelTheme();
   });
   labelTheme();
 
   /* Doodles wobble: re-seed the shared noise filter a few times a second */
   var noise = document.getElementById('boil-noise'), seed = 1;
-  if (!calm && noise) setInterval(function () { seed = seed % 5 + 1; noise.setAttribute('seed', seed); jitterSeed = seed; }, 170);
-  var jitterSeed = 1;
+  if (!calm && noise) setInterval(function () { seed = seed % 5 + 1; noise.setAttribute('seed', seed); }, 170);
 
   /* Nav state */
   var top = $('.top'), links = $$('nav a');
@@ -42,19 +41,26 @@
     bubbleText.textContent = text;
     bubble.classList.remove('say'); void bubble.offsetWidth; bubble.classList.add('say');
   }
+  var count = 0;
+  var idle = "Pick an apple. I'll show you where I used that skill.";
+  function announce() {
+    if (!active) return;
+    bubbleActions.hidden = false;
+    say('Ouch! ' + names[active] + ': I used it in ' + count + (count === 1 ? ' place.' : ' places.'));
+  }
   function apply(skill) {
     active = skill;
     document.body.classList.toggle('filtering', !!skill);
-    var n = 0;
+    count = 0;
     items.forEach(function (el) {
       var hit = !!skill && el.dataset.skills.split(' ').indexOf(skill) !== -1;
       el.classList.toggle('match', hit);
-      if (hit) n++;
+      if (hit) count++;
     });
     skillBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.skill === skill)); });
-    bubbleActions.hidden = !skill;
-    say(skill ? names[skill] + ': I used it in ' + n + (n === 1 ? ' place.' : ' places.') : "Pick a skill. I'll show you where I used it.");
-    draw();
+    bubbleActions.hidden = true;
+    if (!skill) say(idle);
+    syncApples(skill);
   }
   skillBtns.forEach(function (b) {
     b.setAttribute('aria-pressed', 'false');
@@ -67,96 +73,107 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && active) apply(null); });
 
-  /* 3D skill orbit: real buttons placed on a rotating sphere, sketchy strings on a canvas */
-  var stage = $('.stage'), canvas = $('canvas', stage), ctx = canvas.getContext('2d');
-  var nodes = $$('.node', stage);
-  var pts = nodes.map(function (_, i) {
-    var y = 1 - 2 * (i + 0.5) / nodes.length, r = Math.sqrt(1 - y * y), phi = i * 2.399963;
-    return { x: Math.cos(phi) * r, y: y, z: Math.sin(phi) * r };
+  /* Newton's tree: each skill is an apple. Pick one and gravity does the rest. */
+  var stage = $('.stage'), newton = $('.newton');
+  var G = 2600, W = 0, H = 0, R = 20, head = {}, ground = 0, running = false, last = 0;
+  var fruit = $$('.apple', stage).map(function (el) {
+    return { el: el, skill: el.dataset.skill, fx: Number(el.dataset.x) / 100, fy: Number(el.dataset.y) / 100, x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0, mode: 'home', bonked: false, t: 0, from: null };
   });
-  var yaw = 0.4, pitch = 0.3, speed = calm ? 0 : 0.28, want = speed, hovering = false, dragging = false, lastX = 0, lastY = 0;
-  var W = 0, H = 0, dpr = 1, screen = [];
-  function size() {
-    var r = stage.getBoundingClientRect();
-    W = r.width; H = r.height; dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = W * dpr; canvas.height = H * dpr;
+  function place(a) {
+    a.el.style.transform = 'translate(' + a.x.toFixed(1) + 'px,' + a.y.toFixed(1) + 'px) translate(-50%,-' + R + 'px)';
+    a.el.style.setProperty('--rot', a.rot.toFixed(0) + 'deg');
+    a.el.style.zIndex = a.mode === 'home' ? '2' : '4';
   }
-  function rand(i) { var x = Math.sin(i * 127.1 + jitterSeed * 311.7) * 43758.5453; return x - Math.floor(x) - 0.5; }
-  function draw() {
-    if (!W) return;
-    var cx = W / 2, cy = H / 2, Rx = W * (W < 420 ? 0.29 : 0.36), Ry = H * 0.36;
-    var cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
-    screen = pts.map(function (p, i) {
-      var x1 = p.x * cyw + p.z * syw, z1 = -p.x * syw + p.z * cyw;
-      var y2 = p.y * cp - z1 * sp, z2 = p.y * sp + z1 * cp;
-      var k = 1 / (1 - z2 * 0.22), depth = (z2 + 1) / 2;
-      var s = { x: cx + x1 * Rx * k, y: cy + y2 * Ry * k, depth: depth };
-      var el = nodes[i];
-      el.style.transform = 'translate(-50%,-50%) translate(' + s.x.toFixed(1) + 'px,' + s.y.toFixed(1) + 'px) scale(' + (0.78 + 0.34 * depth).toFixed(3) + ')';
-      el.style.zIndex = String(depth < 0.5 ? 1 + Math.round(depth * 8) : 8 + Math.round(depth * 8));
-      el.style.opacity = (0.55 + 0.45 * depth).toFixed(2);
-      return s;
+  function layout() {
+    W = stage.clientWidth; H = stage.clientHeight;
+    R = fruit[0].el.querySelector('svg').getBoundingClientRect().width / 2 || 20;
+    head = { x: 0.4675 * W, y: 0.615 * H, r: 0.07 * W };
+    ground = 0.865 * H;
+    fruit.forEach(function (a) {
+      if (a.mode === 'home') { a.x = a.fx * W; a.y = a.fy * H; }
+      else if (a.mode === 'rest') { a.x = Math.min(Math.max(a.x, R), W - R); a.y = ground - R; }
+      place(a);
     });
-    var cs = getComputedStyle(root), ink = cs.getPropertyValue('--ink').trim(), pen = cs.getPropertyValue('--coral').trim();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    ctx.lineCap = 'round';
-    screen.forEach(function (s, i) {
-      var on = nodes[i].dataset.skill === active;
-      var mx = (cx + s.x) / 2 + rand(i) * 26, my = (cy + s.y) / 2 + rand(i + 40) * 26;
-      ctx.globalAlpha = on ? 1 : 0.25 + 0.5 * s.depth;
-      ctx.strokeStyle = on ? pen : ink;
-      ctx.lineWidth = on ? 3 : 1.6;
-      ctx.setLineDash(s.depth < 0.45 && !on ? [5, 7] : []);
-      for (var pass = 0; pass < 2; pass++) {
-        ctx.beginPath();
-        ctx.moveTo(cx + rand(i + pass * 9) * 4, cy + rand(i + 3 + pass * 9) * 4);
-        ctx.quadraticCurveTo(mx + rand(i + 60 + pass) * 5, my + rand(i + 80 + pass) * 5, s.x, s.y);
-        ctx.stroke();
+  }
+  function bonk(a) {
+    a.bonked = true;
+    if (a.skill !== active) return;
+    newton.classList.add('hit');
+    setTimeout(function () { newton.classList.remove('hit'); }, 1500);
+    announce();
+  }
+  function drop(a) {
+    a.el.classList.add('down');
+    var side = a.fx * W < head.x ? -1 : 1;
+    if (calm) { a.mode = 'rest'; a.x = head.x + side * (head.r + R * 2.4); a.y = ground - R; a.rot = side * 20; place(a); bonk(a); return; }
+    var dy = (head.y - head.r - R) - a.y;
+    a.mode = 'fall'; a.vy = 0; a.vr = side * 200; a.bonked = false;
+    if (dy > 12) { var t = Math.sqrt(2 * dy / G); a.vx = (head.x + side * head.r * 0.45 - a.x) / t; }
+    else { a.vx = side * 60; bonk(a); }
+    kick();
+  }
+  function sendBack(a) {
+    if (a.mode === 'home') return;
+    a.el.classList.remove('down');
+    if (calm) { a.mode = 'home'; a.rot = 0; layout(); return; }
+    a.mode = 'back'; a.t = 0; a.from = { x: a.x, y: a.y };
+    kick();
+  }
+  function syncApples(skill) {
+    fruit.forEach(function (a) {
+      if (a.skill === skill) { if (a.mode === 'home' || a.mode === 'back') drop(a); else announce(); }
+      else sendBack(a);
+    });
+  }
+  function step(a, dt) {
+    if (a.mode === 'fall') {
+      a.vy += G * dt; a.x += a.vx * dt; a.y += a.vy * dt; a.rot += a.vr * dt;
+      var dx = a.x - head.x, dy = a.y - head.y, d = Math.hypot(dx, dy);
+      if (!a.bonked && d < head.r + R) {
+        var nx = dx / d, ny = dy / d, vn = a.vx * nx + a.vy * ny;
+        if (vn < 0) { a.vx -= 1.5 * vn * nx; a.vy -= 1.5 * vn * ny; }
+        var side = a.fx * W < head.x ? -1 : 1;
+        a.vx = side * Math.max(Math.abs(a.vx), 0.3 * W);
+        a.vy = Math.min(a.vy, -0.55 * W);
+        a.vr = side * 420;
+        bonk(a);
       }
-    });
-    ctx.globalAlpha = 1;
+      if (a.x < R) { a.x = R; a.vx = Math.abs(a.vx) * 0.5; }
+      if (a.x > W - R) { a.x = W - R; a.vx = -Math.abs(a.vx) * 0.5; }
+      if (a.y > ground - R) {
+        a.y = ground - R; a.vy = -a.vy * 0.4; a.vx *= 0.6; a.vr = a.vx * 3;
+        if (!a.bonked) bonk(a);
+        if (Math.abs(a.vy) < 70) { a.mode = 'rest'; a.vy = a.vx = a.vr = 0; }
+      }
+    } else if (a.mode === 'back') {
+      a.t = Math.min(a.t + dt / 0.6, 1);
+      var e = 1 - Math.pow(1 - a.t, 3), hx = a.fx * W, hy = a.fy * H;
+      a.x = a.from.x + (hx - a.from.x) * e;
+      a.y = a.from.y + (hy - a.from.y) * e - Math.sin(a.t * Math.PI) * 30;
+      a.rot *= 0.85;
+      if (a.t >= 1) { a.mode = 'home'; a.rot = 0; }
+    }
+    place(a);
   }
-  var prev = 0, visible = true;
-  function frame(t) {
-    var dt = Math.min((t - prev) / 1000, 0.05); prev = t;
-    speed += ((hovering || dragging ? 0 : want) - speed) * Math.min(dt * 5, 1);
-    yaw += speed * dt;
-    if (visible) draw();
-    requestAnimationFrame(frame);
+  function loop(t) {
+    var dt = Math.min((t - last) / 1000, 0.032); last = t;
+    var busy = false;
+    fruit.forEach(function (a) { if (a.mode === 'fall' || a.mode === 'back') { step(a, dt); busy = busy || a.mode === 'fall' || a.mode === 'back'; } });
+    if (busy) requestAnimationFrame(loop); else running = false;
   }
-  stage.addEventListener('pointerenter', function () { hovering = true; });
-  stage.addEventListener('pointerleave', function () { hovering = false; });
-  stage.addEventListener('focusin', function () { hovering = true; });
-  stage.addEventListener('focusout', function () { hovering = false; });
-  stage.addEventListener('pointerdown', function (e) {
-    if (e.target.closest('.node')) return;
-    dragging = true; lastX = e.clientX; lastY = e.clientY;
-    stage.classList.add('dragging'); stage.setPointerCapture(e.pointerId);
-  });
-  stage.addEventListener('pointermove', function (e) {
-    if (!dragging) return;
-    yaw += (e.clientX - lastX) * 0.008;
-    pitch = Math.max(-0.9, Math.min(0.9, pitch + (e.clientY - lastY) * 0.006));
-    lastX = e.clientX; lastY = e.clientY;
-    if (calm) draw();
-  });
-  function stopDrag() { dragging = false; stage.classList.remove('dragging'); }
-  stage.addEventListener('pointerup', stopDrag);
-  stage.addEventListener('pointercancel', stopDrag);
-  window.addEventListener('resize', function () { size(); draw(); });
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }).observe(stage);
-  size(); draw();
-  if (!calm) requestAnimationFrame(function (t) { prev = t; frame(t); });
+  function kick() { if (running) return; running = true; requestAnimationFrame(function (t) { last = t; loop(t); }); }
+  window.addEventListener('resize', layout);
+  layout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
 
-  /* The robot watches the cursor */
+  /* Newton watches the cursor */
   var eyes = $$('.eye'), pupils = $$('.pupil');
   if (!calm) window.addEventListener('pointermove', function (e) {
     eyes.forEach(function (eye, i) {
       var r = eye.getBoundingClientRect();
       var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-      var d = Math.min(Math.hypot(dx, dy) / 40, 1) * 5, a = Math.atan2(dy, dx);
-      pupils[i].style.transform = 'translate(' + (Math.cos(a) * d).toFixed(1) + 'px,' + (Math.sin(a) * d).toFixed(1) + 'px)';
+      var d = Math.min(Math.hypot(dx, dy) / 40, 1) * 2.6, an = Math.atan2(dy, dx);
+      pupils[i].style.transform = 'translate(' + (Math.cos(an) * d).toFixed(1) + 'px,' + (Math.sin(an) * d).toFixed(1) + 'px)';
     });
   }, { passive: true });
 
