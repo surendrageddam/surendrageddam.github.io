@@ -221,6 +221,58 @@
     watch.forEach(function (el) { el.classList.add('seen'); });
   }
 
+  /* Scrolling shakes apples loose: they drop through the page, bounce on the bottom edge and roll away */
+  if (!calm) (function () {
+    var layer = document.createElement('div');
+    layer.className = 'rain'; layer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(layer);
+    var art = fruit[0].el.querySelector('svg').innerHTML, kinds = ['k-red', 'k-green', 'k-gold'];
+    var live = [], going = false, prevT = 0, lastY = window.scrollY, travelled = 0;
+    function spawn() {
+      if (live.length >= 7) return;
+      var el = document.createElement('div');
+      el.className = 'drop ' + kinds[Math.floor(Math.random() * 3)];
+      el.innerHTML = '<svg viewBox="0 0 40 44">' + art + '</svg>';
+      var size = 26 + Math.random() * 20, x = Math.random() * (window.innerWidth - size) + size / 2, y = -size;
+      var box = stage.getBoundingClientRect();
+      if (box.bottom > 120 && box.top < window.innerHeight) {
+        var home = fruit.filter(function (a) { return a.mode === 'home'; });
+        var pick = home[Math.floor(Math.random() * home.length)];
+        if (pick) { var r = pick.el.querySelector('svg').getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; size = r.width; }
+      }
+      el.style.width = size + 'px';
+      layer.appendChild(el);
+      live.push({ el: el, x: x, y: y, r: size / 2, vx: (Math.random() - 0.5) * 160, vy: Math.random() * 120, rot: Math.random() * 360, vr: (Math.random() - 0.5) * 500, hits: 0, fade: 1 });
+      if (!going) { going = true; requestAnimationFrame(function (t) { prevT = t; tickRain(t); }); }
+    }
+    function tickRain(t) {
+      var dt = Math.min((t - prevT) / 1000, 0.032); prevT = t;
+      var floor = window.innerHeight;
+      live = live.filter(function (d) {
+        d.vy += 1900 * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.rot += d.vr * dt;
+        if (d.y > floor - d.r && d.vy > 0) {
+          d.y = floor - d.r; d.hits++;
+          d.vy = -d.vy * 0.42; d.vx *= 0.8; d.vr = d.vx * 4;
+          if (Math.abs(d.vy) < 90) d.vy = 0;
+        }
+        if (d.hits >= 2) d.fade -= dt * 1.6;
+        if (d.fade <= 0 || d.x < -60 || d.x > window.innerWidth + 60) { d.el.remove(); return false; }
+        d.el.style.transform = 'translate(' + d.x.toFixed(1) + 'px,' + d.y.toFixed(1) + 'px) translate(-50%,-50%) rotate(' + d.rot.toFixed(0) + 'deg)';
+        d.el.style.opacity = Math.max(d.fade, 0).toFixed(2);
+        return true;
+      });
+      if (live.length) requestAnimationFrame(tickRain); else going = false;
+    }
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY;
+      travelled += Math.abs(y - lastY); lastY = y;
+      while (travelled > 240) {
+        travelled -= 240;
+        if (Math.random() < 0.75) spawn();
+      }
+    }, { passive: true });
+  })();
+
   /* Local time in Bengaluru */
   var clock = document.getElementById('clock');
   function tick() {
