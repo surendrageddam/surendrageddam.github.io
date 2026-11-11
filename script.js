@@ -187,6 +187,39 @@
     el.addEventListener('pointerleave', function () { el.style.setProperty('--ry', '0deg'); el.style.setProperty('--rx', '0deg'); });
   });
 
+  /* Newton's cradle: the end balls trade momentum, the middle two stay put */
+  var cradle = $('.cradle'), pends = $$('.pend'), swinging = false;
+  function swing() {
+    if (calm || swinging) return;
+    swinging = true;
+    var A = window.innerWidth < 600 ? 20 : 30, t0 = null;
+    requestAnimationFrame(function step(t) {
+      if (t0 === null) t0 = t;
+      var s = (t - t0) / 1000, amp = A * Math.exp(-s / 3), ang = amp * Math.cos(s * 2 * Math.PI / 1.05);
+      pends[0].style.transform = ang > 0 ? 'rotate(' + ang.toFixed(2) + 'deg)' : '';
+      pends[3].style.transform = ang < 0 ? 'rotate(' + ang.toFixed(2) + 'deg)' : '';
+      if (amp > 0.7) requestAnimationFrame(step);
+      else { pends[0].style.transform = pends[3].style.transform = ''; swinging = false; }
+    });
+  }
+  cradle.addEventListener('click', swing);
+  $('.swing').addEventListener('click', swing);
+  if (calm) $('.swing-row').hidden = true;
+
+  /* Apples collect in the basket as you read down the page */
+  var basketApples = $$('.b-apple'), basketCount = $('.basket-count'), contact = $('#contact'), got = -1;
+  function fillBasket() {
+    var end = contact.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.55;
+    var n = Math.max(0, Math.min(8, Math.floor(window.scrollY / Math.max(end, 1) * 8)));
+    if (n === got) return;
+    got = n;
+    basketApples.forEach(function (el, i) { el.classList.toggle('in', i < n); });
+    basketCount.textContent = n < 8 ? n + ' of 8 apples collected' : 'All 8 collected. Pick one to talk about.';
+  }
+  window.addEventListener('scroll', fillBasket, { passive: true });
+  window.addEventListener('resize', fillBasket);
+  fillBasket();
+
   /* Scroll: headings get their squiggle, notes and cards drop in, numbers count up */
   function fmt(el, v) {
     var dec = Number(el.dataset.dec || 0);
@@ -201,7 +234,7 @@
       if (p < 1) requestAnimationFrame(step);
     });
   }
-  var watch = $$('.sec, .pop');
+  var watch = $$('.sec, .pop, .cradle');
   $$('.stats .pop, .wins').forEach(function (group) {
     var kids = group.classList.contains('pop') ? [group] : $$('.pop', group);
     kids.forEach(function (k, i) { k.style.setProperty('--i', group.classList.contains('pop') ? $$('.stats .pop').indexOf(group) : i); });
@@ -212,8 +245,7 @@
         if (!en.isIntersecting) return;
         io.unobserve(en.target);
         en.target.classList.add('seen');
-        var num = $('[data-to]', en.target);
-        if (num && !calm) countUp(num);
+        if (en.target === cradle && !calm) { $$('[data-to]', cradle).forEach(countUp); setTimeout(swing, 300); }
       });
     }, { threshold: 0.2 });
     watch.forEach(function (el) { io.observe(el); });
