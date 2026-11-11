@@ -33,7 +33,7 @@
   onScroll();
 
   /* Skill filter: shared by the orbit and the tags on each project */
-  var names = { harness: 'Agentic harness', orchestration: 'Multi-agent orchestration', memory: 'Agentic memory', voice: 'Voice AI agents', rag: 'Multimodal RAG', text2sql: 'Text2SQL', evals: 'Evals' };
+  var names = { harness: 'Agentic harness', orchestration: 'Multi-agent orchestration', memory: 'Agentic memory', voice: 'Voice AI agents', rag: 'Multimodal RAG', text2sql: 'Text2SQL', evals: 'Evals', cortex: 'Snowflake Cortex' };
   var skillBtns = $$('[data-skill]'), items = $$('[data-skills]');
   var bubble = $('.bubble'), bubbleText = $('.bubble-text'), bubbleActions = $('.bubble-actions');
   var active = null;
@@ -210,11 +210,11 @@
   var basketApples = $$('.b-apple'), basketCount = $('.basket-count'), contact = $('#contact'), got = -1;
   function fillBasket() {
     var end = contact.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.55;
-    var n = Math.max(0, Math.min(7, Math.floor(window.scrollY / Math.max(end, 1) * 7)));
+    var n = Math.max(0, Math.min(8, Math.floor(window.scrollY / Math.max(end, 1) * 8)));
     if (n === got) return;
     got = n;
     basketApples.forEach(function (el, i) { el.classList.toggle('in', i < n); });
-    basketCount.textContent = n < 7 ? n + ' of 7 apples collected' : 'All 7 collected. Pick one to talk about.';
+    basketCount.textContent = n < 8 ? n + ' of 8 apples collected' : 'All 8 collected. Pick one to talk about.';
   }
   window.addEventListener('scroll', fillBasket, { passive: true });
   window.addEventListener('resize', fillBasket);
