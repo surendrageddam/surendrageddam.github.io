@@ -75,7 +75,7 @@ nav a:hover::after, nav a.on::after { clip-path: inset(0); }
 .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2.5rem; align-items: center; padding-block: 3.5rem 3rem; }
 .hero-text { position: relative; }
 .hello { font: 600 1.7rem/1.2 var(--hand); color: var(--pen); margin: 0 0 .75rem; transform: rotate(-1.5deg); transform-origin: left; }
-h1 { font: 700 clamp(3.4rem, 8vw, 6.2rem)/.92 var(--hand); letter-spacing: -.01em; margin: 0 0 1.5rem; text-wrap: balance; }
+h1 { font: 700 clamp(3.2rem, 7.2vw, 5.4rem)/.95 var(--hand); letter-spacing: -.01em; margin: 0 0 1.5rem; text-wrap: balance; }
 .hl { background: linear-gradient(transparent 12%, var(--hl) 12%, var(--hl) 88%, transparent 88%) no-repeat 0 0 / 0% 100%; color: var(--note-ink); padding: 0 .12em; margin: 0 -.06em; border-radius: 4px 14px 6px 12px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .lede { font-size: 1.18rem; color: var(--soft); max-width: 33rem; margin: 0 0 2rem; }
 .actions { display: flex; flex-wrap: wrap; gap: 1rem 1.4rem; align-items: center; margin: 0; }
